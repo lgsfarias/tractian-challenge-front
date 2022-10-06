@@ -1,9 +1,17 @@
+import { ThemeProvider } from 'styled-components';
 import './App.css'
+import AppRoutes from './Routes';
+import * as S from './styles/global'
+import theme from './styles/themes/theme';
 
 function App() {
 
   return (
-    <h1>TRACTIAN APP</h1>
+    <ThemeProvider theme={theme}>
+      <S.Reset/>
+      <S.Global/>
+      <AppRoutes/>
+    </ThemeProvider>
   )
 }
 
