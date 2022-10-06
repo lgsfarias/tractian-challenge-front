@@ -26,8 +26,22 @@ export const LoginWrapper = styled(Wrapper)`
       border-radius: 10px 10px 0 0;
     }}
 
-  .form {
+  .login-form {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     flex: 1;
+    padding: 0 20px;
+    height: 100%;
+    width: 100%;
+
+    .login-form-button {
+      width: 100%;
+      height: 50px;
+      border-radius: 5px;
+      border: none;
+      font-size: 20px;
+      background-color: ${(props) => props.theme.colors.primary};
+    }
   }
 `;
