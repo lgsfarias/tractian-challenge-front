@@ -1,4 +1,6 @@
 import { ThemeProvider } from 'styled-components';
+import { AlertProvider } from './contexts/AlertContext';
+import AlertComponent from './components/Alert';
 import './App.css'
 import AppRoutes from './Routes';
 import * as S from './styles/global'
@@ -11,7 +13,10 @@ function App() {
     <ThemeProvider theme={theme}>
       <S.Reset/>
       <S.Global/>
-      <AppRoutes/>
+      <AlertProvider>
+        <AppRoutes/>
+        <AlertComponent />
+      </AlertProvider>
     </ThemeProvider>
   )
 }
