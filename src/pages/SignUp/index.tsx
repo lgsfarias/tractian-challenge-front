@@ -1,28 +1,25 @@
-import * as S from './style'
+import * as S from '../Login/style'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import factory from '../../assets/factory.png'
 import useAlert from '../../hooks/useAlert';
-import useAuth from '../../hooks/useAuth';
-import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { Typography } from 'antd'
 import { AxiosError } from 'axios';
 
 const { Title } = Typography;
 
-export default function Login() {
+export default function SignUp() {
   const navigate = useNavigate();
   const { setMessage } = useAlert();
-  const { login } = useAuth();
 
   const onFinish = async (values: any) => {
     try {
-      const {
-        data: { token },
-      } = await api.post('/login', values);
-      login(token);
-      navigate('/dashboard');
+      await api.post('/signup', values);
+      setMessage({ type: 'success', message: 'Usuário cadastrado com sucesso!' });
+      navigate('/');
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
         setMessage({
@@ -40,15 +37,21 @@ export default function Login() {
         <img src={factory} alt="factory" />
       </div>
       <Form
-      name="normal_login"
+      name="normal_register"
       className="login-form"
       initialValues={{ remember: true }}
       onFinish={onFinish}
     >
-      <Title level={1} className='title' >Login</Title>
+      <Title level={1} className='title' > Cadastro </Title>
+      <Form.Item
+        name="name"
+        rules={[{ required: true, message: 'Por favor insira seu nome!' }]}
+      >
+        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Nome"/>
+      </Form.Item>
       <Form.Item
         name="email"
-        rules={[{ type:'email', required: true, message: 'Por favor insira um email válido!' }]}
+        rules={[{ type: "email", required: true, message: 'Por favor insira seu email!' }]}
       >
         <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email"/>
       </Form.Item>
@@ -62,16 +65,39 @@ export default function Login() {
           placeholder="Senha"
         />
       </Form.Item>
+      <Form.Item
+        name="confirmPassword"
+        dependencies={['password']}
+        hasFeedback
+        rules={[{ 
+          required: true, 
+          message: 'Por favor confirme sua senha!', } ,
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('As senhas não são iguais!'));
+            },
+          }),
+        ]}
+      >
+        <Input
+          prefix={<LockOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="Confirmar senha"
+        />
+      </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" className="login-form-button">
-          Acessar
+          Cadastrar
         </Button>
       </Form.Item>
-      <Title level={5} onClick={() => navigate('/signup')} style={{
+      <Title level={5} onClick={() => navigate('/')} style={{
         color: '#1890ff',
         cursor: 'pointer',
         textDecoration: 'underline',
-      }}>Não possui cadastro? Clique aqui
+      }}> Já possui uma conta?
       </Title>
     </Form>
     </S.LoginWrapper>
