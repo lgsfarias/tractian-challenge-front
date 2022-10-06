@@ -1,18 +1,40 @@
 import * as S from './style'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 import factory from '../../assets/factory.png'
+import useAlert from '../../hooks/useAlert';
+import useAuth from '../../hooks/useAuth';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input } from 'antd';
-import { Typography } from 'antd';
-import styled from 'styled-components';
+import { Button, Form, Input, Alert } from 'antd';
+import { Typography } from 'antd'
+import { AxiosError } from 'axios';
 
 const { Title } = Typography;
 
 export default function Login() {
   const navigate = useNavigate();
-  const onFinish = (values: any) => {
+  const { setMessage } = useAlert();
+  const { login } = useAuth();
+
+  const onFinish = async (values: any) => {
     console.log('Received values of form: ', values);
+    try {
+      const {
+        data: { token },
+      } = await api.post('/login', values);
+      login(token);
+      navigate('/dashboard');
+    } catch (error: Error | AxiosError | any) {
+      if(error.response) {
+        setMessage({
+          type: 'error',
+          message: error.response.data.message,
+        });
+      };
+    };
   };
+
   
   return (
     <S.LoginWrapper>
@@ -30,19 +52,19 @@ export default function Login() {
         marginBottom: '40px'
       }}>Login</Title>
       <Form.Item
-        name="username"
-        rules={[{ required: true, message: 'Please input your Username!' }]}
+        name="email"
+        rules={[{ type:'email', required: true, message: 'Por favor insira um email válido!' }]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email"/>
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: 'Please input your Password!' }]}
+        rules={[{ required: true, message: 'Por favor insira sua senha!' }]}
       >
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Password"
+          placeholder="Senha"
         />
       </Form.Item>
       <Form.Item>
