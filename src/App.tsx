@@ -1,5 +1,6 @@
 import { ThemeProvider } from 'styled-components';
 import { AlertProvider } from './contexts/AlertContext';
+import { AuthProvider } from './contexts/AuthContext';
 import AlertComponent from './components/Alert';
 import './App.css'
 import AppRoutes from './Routes';
@@ -13,10 +14,12 @@ function App() {
     <ThemeProvider theme={theme}>
       <S.Reset/>
       <S.Global/>
-      <AlertProvider>
-        <AppRoutes/>
-        <AlertComponent />
-      </AlertProvider>
+      <AuthProvider>
+        <AlertProvider>
+          <AppRoutes/>
+          <AlertComponent />
+        </AlertProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }
