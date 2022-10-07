@@ -60,10 +60,10 @@ export const Global = createGlobalStyle`
   body {
     height: 100%;
     margin: 0;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
     font-family: ${(props) => props.theme.fonts.primary}, sans-serif;
     background-image: linear-gradient( 45deg, #2c68e9, #1c3a89);
     /* background-color: ${(props) => props.theme.colors.primary}; */
@@ -71,4 +71,13 @@ export const Global = createGlobalStyle`
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
+  #components-layout-demo-side .logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}
 `;
