@@ -22,7 +22,7 @@ export default function Login() {
         data: { token },
       } = await api.post('/login', values);
       login(token);
-      navigate('/dashboard');
+      navigate('/home');
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
         setMessage({
