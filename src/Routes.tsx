@@ -3,7 +3,9 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './components/Dashboard';
+import Company from './pages/Company';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 
@@ -13,7 +15,8 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/home" element={<Dashboard children={<Home/>}/>} />
+        <Route path="/companies/:id" element={<Dashboard children={<Company/>}/>} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </Router>
