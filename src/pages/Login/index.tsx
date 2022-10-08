@@ -19,9 +19,9 @@ export default function Login() {
   const onFinish = async (values: any) => {
     try {
       const {
-        data: { token },
+        data: { token , companyId },
       } = await api.post('/login', values);
-      login(token);
+      login(token, companyId);
       navigate('/home');
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
