@@ -90,12 +90,12 @@ export default function SideMenu(){
         naigate('/home');
         return;
       }
-      if (e.keyPath[e.keyPath.length - 1] === "Companies") {
-        if (e.key === 'NewCompany'){
-          console.log('new company');
+      if (e.keyPath[e.keyPath.length - 1] === "Units") {
+        if (e.key === 'add-unit'){
+          naigate('/units/new');
           return;
         }
-        naigate(`/companies/${e.key}`);
+        naigate(`/units/${e.key}`);
         return;
       }
     }
