@@ -1,19 +1,21 @@
 import * as S from '../Login/style'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import factory from '../../assets/factory.png'
 import useAlert from '../../hooks/useAlert';
 import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 import { Typography } from 'antd'
 import { AxiosError } from 'axios';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 export default function SignUp() {
   const navigate = useNavigate();
   const { setMessage } = useAlert();
+  const [companies, setCompanies] = useState([]);
 
   const onFinish = async (values: any) => {
     try {
@@ -30,6 +32,22 @@ export default function SignUp() {
     };
   };
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await api.get('/companies');
+        setCompanies(response.data);
+      } catch (error: Error | AxiosError | any) {
+        if(error.response) {
+          setMessage({
+            type: 'error',
+            message: error.response.data.message,
+          });
+        };
+      }
+    })();
+  }, []);
+
   
   return (
     <S.LoginWrapper>
@@ -43,6 +61,16 @@ export default function SignUp() {
       onFinish={onFinish}
     >
       <Title level={1} className='title' > Cadastro </Title>
+      <Form.Item
+        name="company"
+        rules={[{ required: true, message: 'Por favor, selecione uma empresa!' }]}
+      >
+        <Select placeholder="Selecione uma empresa">
+          {companies.map((company: any) => (
+            <Option key={company._id} value={company._id}>{company.name}</Option>
+          ))}
+        </Select>
+      </Form.Item>
       <Form.Item
         name="name"
         rules={[{ required: true, message: 'Por favor insira seu nome!' }]}
