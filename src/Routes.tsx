@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import NewUnit from './pages/NewUnit';
 import SignUp from './pages/SignUp';
+import Unit from './pages/Unit';
 
 export default function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ export default function AppRoutes() {
         <Route path="/home" element={<Dashboard children={<Home/>}/>} />
         <Route path="/companies/:id" element={<Dashboard children={<Company/>}/>} />
         <Route path="/units/new" element={<Dashboard children={<NewUnit/>} />} />
+        <Route path="units/:id" element={<Dashboard children={<Unit/>} />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </Router>
