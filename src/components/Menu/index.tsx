@@ -5,8 +5,8 @@ import useAuth from '../../hooks/useAuth';
 import {MdLocationOn} from 'react-icons/md';
 import {TbBuildingFactory2} from 'react-icons/tb';
 import {
-  DesktopOutlined,
-  PieChartOutlined,
+  DashboardOutlined,
+  PlusSquareOutlined,
 } from '@ant-design/icons';
 import {MenuProps } from 'antd';
 import {Menu } from 'antd';
@@ -29,18 +29,42 @@ function getItem(
   }
 
 export default function SideMenu(){
-  const {token} = useAuth();
+  const {token, companyId} = useAuth();
   const naigate = useNavigate();
-  const [companies, setCompanies] = useState([]);
+  const [units, setUnits] = useState([]);
 
-  const companyItems: MenuItem[] = [...companies.map((company: any) => {
-    return getItem(company.name, company._id, <MdLocationOn />)}), 
-    getItem('Nova Empresa', 'NewCompany', <PieChartOutlined />)];
+  const unitItems: MenuItem[] = [...units.map((unit: any) => {
+    return getItem(unit.name, unit._id, <MdLocationOn />);
+  }), 
+  getItem('New Unit', 'add-unit', <PlusSquareOutlined />)];
 
   const items: MenuItem[] = [
-    getItem("Home", "Home", <DesktopOutlined />),
-    getItem("Companies", "Companies", <TbBuildingFactory2 />, companyItems),
+    getItem("Dashboard", "Home", <DashboardOutlined />),
+    getItem("Company", "company", <TbBuildingFactory2 />, [
+      getItem(`${companyId}`, "companyId", <PlusSquareOutlined />),
+    ]),
+    getItem("Units", "Units", <TbBuildingFactory2 />, unitItems),
+    getItem("Assets", "Assets", <TbBuildingFactory2 />,[
+      getItem("Unit 1", "sub1", <MdLocationOn />,[
+        getItem("Asset 1", "Asset1", <MdLocationOn />),
+        getItem("Asset 2", "Asset2", <MdLocationOn />),
+        getItem("Asset 3", "Asset3", <MdLocationOn />),
+      ]),
+      getItem("Unit 2", "sub2", <MdLocationOn />,[
+        getItem("Asset 4", "Asset4", <MdLocationOn />),
+        getItem("Asset 5", "Asset5", <MdLocationOn />),
+        getItem("Asset 6", "Asset6", <MdLocationOn />),
+      ]),
+      getItem("Unit 3", "sub3", <MdLocationOn />,[
+        getItem("Asset 7", "Asset7", <MdLocationOn />),
+        getItem("Asset 8", "Asset8", <MdLocationOn />),
+        getItem("Asset 9", "Asset9", <MdLocationOn />),
+      ]),
+      getItem("New Asset", "NewAsset", <PlusSquareOutlined />),
+    ]),
+    getItem("All Assets", "All Assets", <TbBuildingFactory2 />),
   ];
+
 
   useEffect(() => {
     (async () => {
@@ -49,13 +73,18 @@ export default function SideMenu(){
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await api.get('/users/show-data', config);
-      setCompanies(response.data.companies);
+      const response = await api.get(`/units/company/${companyId}`, config);
+      setUnits(response.data);
     })();
   }, []);
 
   return (
-    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} onClick={
+    <Menu 
+    theme="dark" 
+    defaultSelectedKeys={['Home']} 
+    mode="inline" 
+    items={items} 
+    onClick={
       (e) => {
       if (e.key === "Home") {
         naigate('/home');
