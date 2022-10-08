@@ -1,9 +1,10 @@
-import { createContext } from 'react';
+import { createContext,useState } from 'react';
 import usePersistedState from '../hooks/usePersistedState';
 
 interface AuthContextInterface {
+  companyId: string | null;
   token: string | null;
-  login: (token: string) => void;
+  login: (token: string, companyId: string) => void;
   signOut: () => void;
 }
 
@@ -13,21 +14,25 @@ interface Props {
   children: React.ReactNode;
 }
 
-const LOCAL_STORAGE_KEY = 'tractian-token';
+const TOKEN_KEY = 'tractian-token';
+const COMPANY_ID_KEY = 'tractian-company-id';
 
 export function AuthProvider({ children }: Props) {
-  const [token, setToken] = usePersistedState(LOCAL_STORAGE_KEY, null);
+  const [token, setToken] = usePersistedState(TOKEN_KEY, null);
+  const [companyId, setCompanyId] = usePersistedState(COMPANY_ID_KEY, null);
 
-  function login(empToken: string) {
+  function login(empToken: string, companyId: string) {
     setToken(empToken);
+    setCompanyId(companyId);
   }
 
   function signOut() {
     setToken(null);
+    setCompanyId(null);
   }
 
   return (
-    <AuthContext.Provider value={{ token, login, signOut }}>
+    <AuthContext.Provider value={{ token, login, signOut, companyId }}>
       {children}
     </AuthContext.Provider>
   );
