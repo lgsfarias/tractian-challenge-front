@@ -7,8 +7,8 @@ import useAuth from '../hooks/useAuth';
 interface CompanyContextInterface {
   units: Unit[];
   employees: Employee[];
-  updateUnits: () => void;
-  updateEmployees: () => void;
+  updateUnits: () => Promise<void>;
+  updateEmployees: () => Promise<void>;
 }
 
 export const CompanyContext = createContext<CompanyContextInterface | null>(null);
@@ -28,24 +28,22 @@ export function CompanyProvider({ children }: Props) {
     },
   };
 
-  function updateUnits(){
-    api.get(`/units/company/${companyId}`, config)
-      .then((response) => {
-        setUnits(response.data);
-      })
-      .catch((error: AxiosError) => {
-        console.log(error);
-      });
+  async function updateUnits(){
+    try{
+      const response = await api.get(`/units/company/${companyId}`, config)
+      setUnits(response.data);
+    } catch (error: Error | AxiosError | any) {
+      console.log(error);
+    };
   }
 
-  function updateEmployees(){
-    api.get(`/employees/by-company/${companyId}`, config)
-      .then((response) => {
-        setEmployees(response.data);
-      })
-      .catch((error: AxiosError) => {
-        console.log(error);
-      });
+  async function updateEmployees(){
+    try{
+      const response = await api.get(`/employees/by-company/${companyId}`, config)
+      setEmployees(response.data);
+    } catch (error: Error | AxiosError | any) {
+      console.log(error);
+    };
   }
   
   useEffect(() => {

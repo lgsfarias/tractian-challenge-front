@@ -25,8 +25,8 @@ export default function Login() {
         data: { token , companyId },
       } = await api.post('/login', values);
       login(token, companyId);
-      updateEmployees();
-      updateUnits();
+      await updateUnits();
+      await updateEmployees();
       navigate('/home');
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
