@@ -4,6 +4,7 @@ import api from '../../services/api';
 import factory from '../../assets/factory.png'
 import useAlert from '../../hooks/useAlert';
 import useAuth from '../../hooks/useAuth';
+import useCompany from '../../hooks/useCompany';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { Typography } from 'antd'
@@ -15,6 +16,8 @@ export default function Login() {
   const navigate = useNavigate();
   const { setMessage } = useAlert();
   const { login } = useAuth();
+  const { updateEmployees, updateUnits } = useCompany();
+
 
   const onFinish = async (values: any) => {
     try {
@@ -22,6 +25,8 @@ export default function Login() {
         data: { token , companyId },
       } = await api.post('/login', values);
       login(token, companyId);
+      updateEmployees();
+      updateUnits();
       navigate('/home');
     } catch (error: Error | AxiosError | any) {
       if(error.response) {

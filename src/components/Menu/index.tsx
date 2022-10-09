@@ -1,7 +1,5 @@
 import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-import useAuth from '../../hooks/useAuth';
 import useCompany from '../../hooks/useCompany';
 import {MdLocationOn} from 'react-icons/md';
 import {TbBuildingFactory2} from 'react-icons/tb';
@@ -30,11 +28,8 @@ function getItem(
   }
 
 export default function SideMenu(){
-  const {token, companyId} = useAuth();
   const naigate = useNavigate();
-  // const [units, setUnits] = useState([]);
-  const {units} = useCompany();
-  const [employees, setEmployees] = useState([]);
+  const {units, employees} = useCompany();
 
   const unitItems: MenuItem[] = [...units.map((unit: any) => {
     return getItem(unit.name, unit._id, <MdLocationOn />);
@@ -71,24 +66,6 @@ export default function SideMenu(){
     getItem("All Assets", "All Assets", <TbBuildingFactory2 />),
   ];
 
-
-  useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    // (async () => {
-    //   const response = await api.get(`/units/company/${companyId}`, config);
-    //   setUnits(response.data);
-    // })();
-    (async () => {
-      const response = await api.get(`/employees/by-company/${companyId}`, config);
-      setEmployees(response.data);
-      console.log(response.data);
-    })();
-  }, []);
-
   return (
     <Menu 
     theme="dark" 
@@ -107,6 +84,14 @@ export default function SideMenu(){
           return;
         }
         naigate(`/units/${e.key}`);
+        return;
+      }
+      if (e.keyPath[e.keyPath.length - 1] === "Employees") {
+        if (e.key === 'add-employee'){
+          naigate('/employees/new');
+          return;
+        }
+        naigate(`/employees/${e.key}`);
         return;
       }
     }
