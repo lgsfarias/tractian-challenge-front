@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
+import useCompany from '../../hooks/useCompany';
 import {MdLocationOn} from 'react-icons/md';
 import {TbBuildingFactory2} from 'react-icons/tb';
 import {
@@ -31,19 +32,24 @@ function getItem(
 export default function SideMenu(){
   const {token, companyId} = useAuth();
   const naigate = useNavigate();
-  const [units, setUnits] = useState([]);
+  // const [units, setUnits] = useState([]);
+  const {units} = useCompany();
+  const [employees, setEmployees] = useState([]);
 
   const unitItems: MenuItem[] = [...units.map((unit: any) => {
     return getItem(unit.name, unit._id, <MdLocationOn />);
   }), 
   getItem('New Unit', 'add-unit', <PlusSquareOutlined />)];
 
+  const employeeItems: MenuItem[] = [...employees.map((employee: any) => {
+    return getItem(employee.name, employee._id, <TbBuildingFactory2 />);
+  }),
+  getItem('New Employee', 'add-employee', <PlusSquareOutlined />)];
+
   const items: MenuItem[] = [
     getItem("Dashboard", "Home", <DashboardOutlined />),
-    getItem("Company", "company", <TbBuildingFactory2 />, [
-      getItem(`${companyId}`, "companyId", <PlusSquareOutlined />),
-    ]),
     getItem("Units", "Units", <TbBuildingFactory2 />, unitItems),
+    getItem("Employees", "Employees", <TbBuildingFactory2 />, employeeItems),
     getItem("Assets", "Assets", <TbBuildingFactory2 />,[
       getItem("Unit 1", "sub1", <MdLocationOn />,[
         getItem("Asset 1", "Asset1", <MdLocationOn />),
@@ -67,14 +73,19 @@ export default function SideMenu(){
 
 
   useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    // (async () => {
+    //   const response = await api.get(`/units/company/${companyId}`, config);
+    //   setUnits(response.data);
+    // })();
     (async () => {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await api.get(`/units/company/${companyId}`, config);
-      setUnits(response.data);
+      const response = await api.get(`/employees/by-company/${companyId}`, config);
+      setEmployees(response.data);
+      console.log(response.data);
     })();
   }, []);
 

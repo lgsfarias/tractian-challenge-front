@@ -7,6 +7,7 @@ import AppRoutes from './Routes';
 import * as S from './styles/global'
 import theme from './styles/themes/theme';
 import 'antd/dist/antd.css';
+import { CompanyProvider } from './contexts/CompanyContext';
 
 function App() {
 
@@ -15,10 +16,12 @@ function App() {
       <S.Reset/>
       <S.Global/>
       <AuthProvider>
-        <AlertProvider>
-          <AppRoutes/>
-          <AlertComponent />
-        </AlertProvider>
+        <CompanyProvider>
+          <AlertProvider>
+            <AppRoutes/>
+            <AlertComponent/>
+          </AlertProvider>
+        </CompanyProvider>
       </AuthProvider>
     </ThemeProvider>
   )
