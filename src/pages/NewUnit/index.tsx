@@ -1,5 +1,6 @@
 import api from "../../services/api"
 import useAuth from "../../hooks/useAuth"
+import useCompany from "../../hooks/useCompany"
 import { useState } from "react"
 import { Button, Form, Input, Typography } from "antd"
 import useAlert from "../../hooks/useAlert"
@@ -9,6 +10,7 @@ const { Title } = Typography
 export default function NewUnit() {
   const { setMessage } = useAlert();
   const { token ,companyId } = useAuth();
+  const { updateUnits } = useCompany();
   const [disabled, setDisabled] = useState(false);
 
   const onFinish = async (values: any) => {
@@ -28,6 +30,7 @@ export default function NewUnit() {
         message: 'Unit created successfully',
       })
       setDisabled(false);
+      updateUnits();
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
         setMessage({
