@@ -36,32 +36,47 @@ export default function SideMenu(){
   const naigate = useNavigate();
   const {units, employees, assets} = useCompany();
 
-  const unitItems: MenuItem[] = [...units.map((unit: Unit) => {
-    return getItem(unit.name, unit._id, <MdLocationOn />);
-  }), 
-  getItem('New Unit', 'add-unit', <PlusSquareOutlined />)];
+  let unitItems: MenuItem[] = [];
+  let employeeItems: MenuItem[] = [];
+  let assetItems: MenuItem[] = [];
 
-  const employeeItems: MenuItem[] = [...employees.map((employee: Employee) => {
-    return getItem(employee.name, employee._id, <UserOutlined />);
-  }),
-  getItem('New Employee', 'add-employee', <PlusSquareOutlined />)];
+  if(units.length > 0 ){
+    unitItems = units.map((unit: Unit) => {
+      return getItem(unit.name, unit._id, <MdLocationOn />);
+    });
+  }
 
-  const assetItems: MenuItem[] = [...units.map((unit: Unit) => {
-    return getItem(unit.name, unit._id, null,[
+  if(employees.length > 0 ){
+    employeeItems = employees.map((employee: Employee) => {
+      return getItem(employee.name, employee._id, <UserOutlined />);
+    });
+  }
+
+  if(assets.length > 0 ){
+    assetItems = units.map((unit: Unit) => {
+      return getItem(unit.name, unit._id, null,[
       ...assets.filter((asset: Asset) => asset.unit._id === unit._id).map((asset: Asset) => {
         return getItem(asset.name, asset._id, <VscGear />);
           }),
         ], 'group'
       );
-    }),
-    getItem('New Asset', 'add-asset', <PlusSquareOutlined />),
-  ];
+    });
+  }
 
   const items: MenuItem[] = [
     getItem("Dashboard", "Home", <DashboardOutlined />),
-    getItem("Units", "Units", <TbBuildingFactory2 />, unitItems),
-    getItem("Employees", "Employees", <UserOutlined />, employeeItems),
-    getItem("Assets", "Assets", <VscGear />, assetItems),
+    getItem("Units", "Units", <TbBuildingFactory2 />, [
+      ...unitItems,
+      getItem('New Unit', 'add-unit', <PlusSquareOutlined />)
+    ]),
+    getItem("Employees", "Employees", <UserOutlined />, [
+      ...employeeItems,
+      getItem('New Employee', 'add-employee', <PlusSquareOutlined />)
+    ]),
+    getItem("Assets", "Assets", <VscGear />, [
+      ...assetItems,
+      getItem('New Asset', 'add-asset', <PlusSquareOutlined />)
+    ]),
 
   ];
 
