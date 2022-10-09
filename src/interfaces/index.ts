@@ -13,13 +13,13 @@ export interface Company {
 export interface Unit {
   _id: string;
   name: string;
-  company: string;
+  company: Company;
 }
 
 export interface Employee {
   _id: string;
   name: string;
-  unit: string;
+  unit: Unit;
 }
 
 export interface Asset {
@@ -28,7 +28,8 @@ export interface Asset {
   name: string;
   description: string;
   model: string;
-  owner: string;
   status: 'Running' | 'Alerting' | 'Stopped';
   healthLevel: number;
+  owner: Employee;
+  unit: Unit;
 }
