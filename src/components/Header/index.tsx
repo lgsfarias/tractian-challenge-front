@@ -12,7 +12,7 @@ export default function AppHeader() {
   const navigate = useNavigate();
 
   return (
-    <Header className="site-layout-" style={{  padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+    <Header className="site-layout-" style={{ zIndex:'9' , position:'sticky' , top:'0' , padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <img 
           src={logo} 
           alt="logo" 

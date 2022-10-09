@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import useCompany from '../../hooks/useCompany';
 import {MdLocationOn} from 'react-icons/md';
 import {TbBuildingFactory2} from 'react-icons/tb';
+import {VscGear} from 'react-icons/vsc';
 import {
   DashboardOutlined,
+  UserOutlined,
   PlusSquareOutlined,
 } from '@ant-design/icons';
 import {MenuProps } from 'antd';
@@ -37,33 +39,32 @@ export default function SideMenu(){
   getItem('New Unit', 'add-unit', <PlusSquareOutlined />)];
 
   const employeeItems: MenuItem[] = [...employees.map((employee: any) => {
-    return getItem(employee.name, employee._id, <TbBuildingFactory2 />);
+    return getItem(employee.name, employee._id, <UserOutlined />);
   }),
   getItem('New Employee', 'add-employee', <PlusSquareOutlined />)];
 
   const items: MenuItem[] = [
     getItem("Dashboard", "Home", <DashboardOutlined />),
     getItem("Units", "Units", <TbBuildingFactory2 />, unitItems),
-    getItem("Employees", "Employees", <TbBuildingFactory2 />, employeeItems),
-    getItem("Assets", "Assets", <TbBuildingFactory2 />,[
+    getItem("Employees", "Employees", <UserOutlined />, employeeItems),
+    getItem("Assets", "Assets", <VscGear />,[
       getItem("Unit 1", "sub1", <MdLocationOn />,[
-        getItem("Asset 1", "Asset1", <MdLocationOn />),
-        getItem("Asset 2", "Asset2", <MdLocationOn />),
-        getItem("Asset 3", "Asset3", <MdLocationOn />),
+        getItem("Asset 1", "Asset1", <VscGear />),
+        getItem("Asset 2", "Asset2", <VscGear />),
+        getItem("Asset 3", "Asset3", <VscGear />),
       ]),
       getItem("Unit 2", "sub2", <MdLocationOn />,[
-        getItem("Asset 4", "Asset4", <MdLocationOn />),
-        getItem("Asset 5", "Asset5", <MdLocationOn />),
-        getItem("Asset 6", "Asset6", <MdLocationOn />),
+        getItem("Asset 4", "Asset4", <VscGear />),
+        getItem("Asset 5", "Asset5", <VscGear />),
+        getItem("Asset 6", "Asset6", <VscGear />),
       ]),
       getItem("Unit 3", "sub3", <MdLocationOn />,[
-        getItem("Asset 7", "Asset7", <MdLocationOn />),
-        getItem("Asset 8", "Asset8", <MdLocationOn />),
-        getItem("Asset 9", "Asset9", <MdLocationOn />),
+        getItem("Asset 7", "Asset7", <VscGear />),
+        getItem("Asset 8", "Asset8", <VscGear />),
+        getItem("Asset 9", "Asset9", <VscGear />),
       ]),
-      getItem("New Asset", "NewAsset", <PlusSquareOutlined />),
+      getItem("New Asset", "add-asset", <PlusSquareOutlined />),
     ]),
-    getItem("All Assets", "All Assets", <TbBuildingFactory2 />),
   ];
 
   return (

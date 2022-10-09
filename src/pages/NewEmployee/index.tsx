@@ -48,7 +48,7 @@ export default function NewEmployee() {
       onFinish={onFinish}
       disabled={disabled}
     >
-      <Title level={1} className='title' >New Unit</Title>
+      <Title level={1} className='title' >New Employee</Title>
       <Form.Item
         name="unit"
         rules={[{ required: true, message: 'Please select a unit!' }]}
