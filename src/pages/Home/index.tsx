@@ -10,7 +10,7 @@ const { Title } = Typography
 export default function Home() {
   const { token } = useAuth()
   const [user, setUser] = useState<User>();
-  const { employees, units,assets } = useCompany();
+  const { employees, units,assets ,updateAssets,updateEmployees,updateUnits} = useCompany();
 
   useEffect(() => {
     (async () => {
@@ -20,6 +20,9 @@ export default function Home() {
         },
       };
       const response = await api.get('/users/show-data', config);
+      await updateEmployees();
+      await updateUnits();
+      await updateAssets();
       setUser(response.data);
     })();
   }, []);

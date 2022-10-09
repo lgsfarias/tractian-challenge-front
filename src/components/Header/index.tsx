@@ -1,4 +1,5 @@
 import useAuth from '../../hooks/useAuth';
+import useCompany from '../../hooks/useCompany';
 import { useNavigate } from 'react-router-dom';
 import {LogoutOutlined} from '@ant-design/icons';
 import { Layout } from 'antd';
@@ -9,6 +10,7 @@ const {Header} = Layout;
 
 export default function AppHeader() {
   const { signOut } = useAuth();
+  const { setAssets,setEmployees,setUnits } = useCompany();
   const navigate = useNavigate();
 
   return (
@@ -29,6 +31,9 @@ export default function AppHeader() {
           onClick={
             () => {
               signOut();
+              setAssets([]);
+              setEmployees([]);
+              setUnits([]);
               navigate('/');
             }
           }

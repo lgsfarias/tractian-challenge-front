@@ -8,6 +8,9 @@ interface CompanyContextInterface {
   units: Unit[];
   employees: Employee[];
   assets: Asset[];
+  setUnits: (units: Unit[]) => void;
+  setEmployees: (employees: Employee[]) => void;
+  setAssets: (assets: Asset[]) => void;
   updateUnits: () => Promise<void>;
   updateEmployees: () => Promise<void>;
   updateAssets: () => Promise<void>;
@@ -67,7 +70,7 @@ export function CompanyProvider({ children }: Props) {
   }, []);
 
   return (
-    <CompanyContext.Provider value={{ employees, units, assets, updateEmployees, updateUnits , updateAssets}}>
+    <CompanyContext.Provider value={{ employees, units, assets, updateEmployees, updateUnits , updateAssets, setEmployees, setUnits, setAssets }}>
       {children}
     </CompanyContext.Provider>
   );
