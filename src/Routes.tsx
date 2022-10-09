@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Company from './pages/Company';
+import Employee from './pages/Employee';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import NewEmployee from './pages/NewEmployee';
@@ -24,6 +25,7 @@ export default function AppRoutes() {
         <Route path="/units/new" element={<Dashboard children={<NewUnit/>} />} />
         <Route path="/units/:id" element={<Dashboard children={<Unit/>} />} />
         <Route path="/employees/new" element={<Dashboard children={<NewEmployee/>} />} />
+        <Route path="/employees/:id" element={<Dashboard children={<Employee/>} />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
     </Router>
