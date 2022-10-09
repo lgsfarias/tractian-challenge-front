@@ -14,12 +14,11 @@ export default function Dashboard({children} : Props) {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
-        <div className="logo" />
-        <SideMenu />
-      </Sider>
+      <AppHeader/>
       <Layout className="site-layout">
-        <AppHeader/>
+        <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
+          <SideMenu />
+        </Sider>
         <Content style={{ margin: '0 16px' }}>
           {children}
         </Content>

@@ -2,6 +2,8 @@ import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import {LogoutOutlined} from '@ant-design/icons';
 import { Layout } from 'antd';
+import logo from '../../assets/logo.svg';
+
 
 const {Header} = Layout;
 
@@ -10,7 +12,14 @@ export default function AppHeader() {
   const navigate = useNavigate();
 
   return (
-    <Header className="site-layout-" style={{  padding: '10px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center'}}>
+    <Header className="site-layout-" style={{  padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <img 
+          src={logo} 
+          alt="logo" 
+          style={{
+            height: '20px',
+
+          }}/>
           <LogoutOutlined 
           style={{
             color: '#fff',
