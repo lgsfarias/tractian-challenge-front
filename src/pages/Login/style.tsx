@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Wrapper from '../../styles/elements/Wrapper';
+import factory from '../../assets/factory.png';
 
 export const LoginWrapper = styled(Wrapper)`
   position: fixed;
@@ -8,9 +9,8 @@ export const LoginWrapper = styled(Wrapper)`
   transform: translate(-50%, -50%);
   width: 70vw;
   height: 70vh;
-  max-width: 400px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   color: ${(props) => props.theme.colors.text};
   background-color: ${(props) => props.theme.colors.background};
@@ -25,10 +25,14 @@ export const LoginWrapper = styled(Wrapper)`
     cursor: pointer;
   }
   .logo {
-    img {
-      width: 100%;
-      border-radius: 10px 10px 0 0;
-    }}
+    height: 100%;
+    max-width: 50%;
+    aspect-ratio: 1/1;
+    background-image: url(${factory});
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 10px 0 0 10px;
+  }
 
   .login-form {
     display: flex;
@@ -38,6 +42,7 @@ export const LoginWrapper = styled(Wrapper)`
     padding: 0 20px;
     height: 100%;
     width: 100%;
+    overflow-y: auto;
 
     .login-form-button {
       width: 100%;
@@ -49,12 +54,12 @@ export const LoginWrapper = styled(Wrapper)`
     }
   }
 
-  @media screen and (max-height: 850px) {
+  @media screen and (max-width: 700px) {
     width: 90vw;
     height: 90vh;
 
-    .title {
-      margin-bottom: 20px;
+    .logo {
+      display: none;
     }
   }
 `;

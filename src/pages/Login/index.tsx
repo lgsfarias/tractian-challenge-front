@@ -1,7 +1,6 @@
 import * as S from './style'
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import factory from '../../assets/factory.png'
 import useAlert from '../../hooks/useAlert';
 import useAuth from '../../hooks/useAuth';
 import useCompany from '../../hooks/useCompany';
@@ -42,9 +41,7 @@ export default function Login() {
   
   return (
     <S.LoginWrapper>
-      <div className="logo">
-        <img src={factory} alt="factory" />
-      </div>
+      <div className="logo"/>
       <Form
       name="normal_login"
       className="login-form"

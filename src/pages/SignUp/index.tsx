@@ -2,7 +2,6 @@ import * as S from '../Login/style'
 import { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-import factory from '../../assets/factory.png'
 import useAlert from '../../hooks/useAlert';
 import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Select } from 'antd';
@@ -51,9 +50,7 @@ export default function SignUp() {
   
   return (
     <S.LoginWrapper>
-      <div className="logo">
-        <img src={factory} alt="factory" />
-      </div>
+      <div className="logo"/>
       <Form
       name="normal_register"
       className="login-form"
