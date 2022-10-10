@@ -91,7 +91,12 @@ export default function Home() {
     },
     xAxis: {
       type: 'category'
-    }, 
+    },
+    yAxis: {
+      title: {
+        text: 'Health Level'
+      },
+    },
     legend: {
       enabled: false
     },
