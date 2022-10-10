@@ -21,7 +21,7 @@ export default function Asset() {
       console.log(response.data);
       setAsset(response.data);
     })();
-  }, []);
+  }, [id]);
 
 
   return (

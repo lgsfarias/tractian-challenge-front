@@ -66,17 +66,17 @@ export default function Home() {
         {
           name: 'Health Level',
           id: 'Running',
-          data: assets.filter(asset => asset.status === 'Running').map(asset => [asset.name, asset.healthLevel])
+          data: assets.filter(asset => asset.status === 'Running').map(asset => [`${asset.name}/${asset.unit.name}`, asset.healthLevel])
         },
         {
           name: 'Health Level',
           id: 'Alerting',
-          data: assets.filter(asset => asset.status === 'Alerting').map(asset => [asset.name, asset.healthLevel])
+          data: assets.filter(asset => asset.status === 'Alerting').map(asset => [`${asset.name}/${asset.unit.name}`, asset.healthLevel])
         },
         {
           name: 'Health Level',
           id: 'Stopped',
-          data: assets.filter(asset => asset.status === 'Stopped').map(asset => [asset.name, asset.healthLevel])
+          data: assets.filter(asset => asset.status === 'Stopped').map(asset => [`${asset.name}/${asset.unit.name}`, asset.healthLevel])
         },
       ]
     }
@@ -106,7 +106,7 @@ export default function Home() {
         colorByPoint: true,
         data: [...assets.map(asset => {
           return {
-            name: asset.name,
+            name: `${asset.name}/${asset.unit.name}`,
             y: asset.healthLevel,
             color: asset.status === 'Running' ? '#52c41a' : asset.status === 'Alerting' ? '#faad14' : '#f5222d',
           }
@@ -187,7 +187,7 @@ export default function Home() {
 
   return (
     user ? 
-    (<>
+    (
       <Space direction="vertical" style={{width: '100%'}}>
       <Title level={2}>Welcome {user.name}</Title>
       <h2>Company: {user.company.name}</h2>
@@ -223,7 +223,7 @@ export default function Home() {
         </Col>
       </Row>
       </Space>
-    </>) : <h1>Loading...</h1>
+    ) : <h1>Loading...</h1>
 
   )
 }
