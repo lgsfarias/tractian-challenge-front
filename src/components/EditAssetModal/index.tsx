@@ -1,20 +1,29 @@
 import api from "../../services/api"
 import useAuth from "../../hooks/useAuth"
 import useCompany from "../../hooks/useCompany"
-import { useState } from "react"
-import { Button, Form, Input, Typography,Radio, Slider,Select,Space } from "antd"
+import { useState, useEffect } from "react"
+import { Button, Form, Input, Typography,Radio, Slider,Select,Space , Modal} from "antd"
 import useAlert from "../../hooks/useAlert"
 import { AxiosError } from "axios"
 import { Asset, Employee } from "../../interfaces"
 const { Title } = Typography
 
-export default function NewAsset() {
+interface Props {
+  asset: Asset;
+  modalVisible: boolean;
+  setModalVisible: (value: boolean) => void;
+  getAsset: () => Promise<void>;
+}
+
+export default function EditAssetModal({asset, modalVisible, setModalVisible, getAsset}: Props) {
   const { setMessage } = useAlert();
   const { token ,companyId } = useAuth();
   const { updateCompany, units,employees } = useCompany();
   const [disabled, setDisabled] = useState(false);
-  const [unit, setUnit] = useState("");
+  const [unit, setUnit] = useState(asset.unit._id);
   const [form] = Form.useForm();
+
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   const status = [
     'Running',
@@ -27,11 +36,7 @@ export default function NewAsset() {
     wrapperCol: { span: 16 },
   };
 
-  const tailLayout = {
-    wrapperCol: { offset: 6, span: 16 },
-  };
-
-  const onFinish = async (values: any) => {
+  const handleOk = async (values: any) => {
     setDisabled(true);
     try {
       const config = {
@@ -39,14 +44,12 @@ export default function NewAsset() {
           Authorization: `Bearer ${token}`,
         },
       };
-      await api.post('/assets', values, config);
-      setMessage({
-        type: 'success',
-        message: 'Asset created successfully',
-      })
-      setDisabled(false);
-      form.resetFields();
+      await api.put(`/assets/${asset._id}`, form.getFieldsValue(), config);
+      setMessage({type: 'success', message: 'Asset updated successfully'});
       updateCompany();
+      await getAsset();
+      setDisabled(false);
+      setModalVisible(false);
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
         setMessage({
@@ -58,23 +61,53 @@ export default function NewAsset() {
     };
   };
 
-  const onReset = () => {
-    form.resetFields();
+  const handleCancel = () => {
+    console.log('Clicked cancel button');
+    setModalVisible(false);
   };
 
+  useEffect(() => {
+    form.setFieldsValue({
+      image: asset?.image,
+      name: asset?.name,
+      model: asset?.model,
+      description: asset?.description,
+      status: asset?.status,
+      healthLevel: asset?.healthLevel,
+      unit: asset?.unit._id,
+      owner: asset?.owner._id,
+    }
+    )
+  }, [asset])
+
+
   return (
+    <Modal
+      title="Edit Asset"
+      open={modalVisible}
+      onOk={handleOk}
+      confirmLoading={confirmLoading}
+      onCancel={handleCancel}
+    >
     <Form
       {...layout}
       form={form}
       name="add_asset"
       className="add_asset-form"
-      initialValues={{
-        remember: true,
-      }}
-      onFinish={onFinish}
+      initialValues={
+        {
+          image: asset?.image,
+          name: asset?.name,
+          model: asset?.model,
+          description: asset?.description,
+          status: asset?.status,
+          healthLevel: asset?.healthLevel,
+          unit: asset?.unit._id,
+          owner: asset?.owner._id,
+        }
+      }
       disabled={disabled}
     >
-      <Title level={1} className='title' >New Asset</Title>
       <Form.Item
         name='image'
         label='Image URL'
@@ -141,7 +174,7 @@ export default function NewAsset() {
           onChange={(value) => setUnit(value)}
         >
           {units.map((item) => (
-            <Select.Option value={item._id} key={item._id}>{item.name}</Select.Option>
+            <Select.Option value={item._id} key={item._id} >{item.name}</Select.Option>
           ))}
         </Select>
       </Form.Item>
@@ -160,7 +193,7 @@ export default function NewAsset() {
         </Select>
       </Form.Item>
 
-      <Form.Item {...tailLayout}>
+      {/* <Form.Item {...tailLayout}>
         <Space>
         <Button 
           type="primary" 
@@ -179,7 +212,8 @@ export default function NewAsset() {
           Reset
         </Button>
         </Space>
-      </Form.Item>
+      </Form.Item> */}
     </Form>
+    </Modal>
   )
 }

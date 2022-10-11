@@ -28,7 +28,7 @@ export default function AppRoutes() {
         <Route path="/units/:id" element={<Dashboard children={<Unit/>} />} />
         <Route path="/employees/new" element={<Dashboard children={<NewEmployee/>} />} />
         <Route path="/employees/:id" element={<Dashboard children={<Employee/>} />} />
-        <Route path="/assets/new" element={<Dashboard children={<NewAsset/>} />} />
+        <Route path="/assets/new" element={<Dashboard children={<NewAsset/>} /> } />
         <Route path="/assets/:id" element={<Dashboard children={<Asset/>} />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>

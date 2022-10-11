@@ -7,6 +7,8 @@ import { useState,useEffect } from 'react';
 import { Asset as IAsset } from '../../interfaces';
 import {ExclamationCircleOutlined} from '@ant-design/icons';
 import { Image , Col , Row, Space, Descriptions, Progress, Tag, Button, Modal} from 'antd';
+import NewAsset from '../NewAsset';
+import EditAssetModal from '../../components/EditAssetModal';
 
 const {confirm} = Modal;
 
@@ -17,6 +19,7 @@ export default function Asset() {
   const { updateCompany } = useCompany();
   const navigate = useNavigate();
   const [asset, setAsset] = useState<IAsset>();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const showPromiseConfirm = (id: string) => {
     confirm({
@@ -30,7 +33,8 @@ export default function Asset() {
               Authorization: `Bearer ${token}`,
             },
           };
-          await api.delete(`/assets/${id}`, config);        
+          await api.delete(`/assets/${id}`, config);  
+          navigate('/home');     
           updateCompany();
           setMessage({type: 'success', message: 'Asset deleted successfully'});
         } catch (error) {
@@ -41,19 +45,30 @@ export default function Asset() {
         console.log('Cancel');
       },
     });
-
   };
 
-  useEffect(() => {
-    (async () => {
+  async function getAsset() {
+    try {
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
       const response = await api.get(`/assets/${id}`, config);
-      console.log(response.data);
       setAsset(response.data);
+    } catch (error) {
+      setMessage({type: 'error', message: 'Error loading asset'});
+    }
+  }
+
+  const showModal = () => {
+    setModalVisible(true);
+  };
+  
+
+  useEffect(() => {
+    (async () => {
+      await getAsset();
     })();
   }, [id]);
 
@@ -86,13 +101,13 @@ export default function Asset() {
               </Descriptions.Item>
               <Descriptions.Item label="Actions" span={24}>
                 <Space>
-                  <Button type="primary">Edit</Button>
+                  <Button type="primary" onClick={showModal}>Edit</Button>
                   <Button type="primary" danger 
                     onClick={() => {
-                      showPromiseConfirm(asset._id)
-                      navigate('/home');
+                      showPromiseConfirm(asset._id);
                     }
                   }>Delete</Button>
+                  <EditAssetModal asset={asset} modalVisible={modalVisible} setModalVisible={setModalVisible} getAsset={getAsset}/>
                 </Space>
               </Descriptions.Item>
             </Descriptions>
