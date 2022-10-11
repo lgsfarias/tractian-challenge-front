@@ -7,6 +7,7 @@ import { Typography , Col, Row, Space} from "antd"
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import drilldown from 'highcharts/modules/drilldown';
+import LoadingPage from "../../components/LoadingPage"
 
 const { Title } = Typography
 
@@ -221,7 +222,7 @@ export default function Home() {
         </Col>
       </Row>
       </Space>
-    ) : <h1>Loading...</h1>
+    ) : <LoadingPage/>
 
   )
 }

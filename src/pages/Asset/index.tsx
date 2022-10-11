@@ -9,6 +9,7 @@ import {ExclamationCircleOutlined} from '@ant-design/icons';
 import { Image , Col , Row, Space, Descriptions, Progress, Tag, Button, Modal} from 'antd';
 import NewAsset from '../NewAsset';
 import EditAssetModal from '../../components/EditAssetModal';
+import LoadingPage from '../../components/LoadingPage';
 
 const {confirm} = Modal;
 
@@ -114,6 +115,6 @@ export default function Asset() {
           </Col>
         </Row>
       </Space>
-    ) : <h1>Loading...</h1>
+    ) : <LoadingPage/>
   );
 }

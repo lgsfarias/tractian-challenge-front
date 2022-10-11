@@ -8,6 +8,7 @@ import {useState,useEffect} from 'react';
 import { Asset } from '../../interfaces';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Space, Table, Tag , Button, Typography, Modal} from 'antd';
+import LoadingPage from '../../components/LoadingPage';
 
 const {confirm} = Modal;
 const { Title } = Typography
@@ -151,6 +152,6 @@ export default function Unit() {
         <Title level={2}>Assets</Title>
         <Table columns={columns} dataSource={data}/>
       </Space>
-    : <h1>Loading...</h1>
+    : <LoadingPage/>
   );
 }
