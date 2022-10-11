@@ -19,7 +19,7 @@ export default function SignUp() {
   const onFinish = async (values: any) => {
     try {
       await api.post('/signup', values);
-      setMessage({ type: 'success', message: 'Usuário cadastrado com sucesso!' });
+      setMessage({ type: 'success', message: 'User created successfully' });
       navigate('/');
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
@@ -57,12 +57,12 @@ export default function SignUp() {
       initialValues={{ remember: true }}
       onFinish={onFinish}
     >
-      <Title level={1} className='title' > Cadastro </Title>
+      <Title level={1} className='title' > Sign Up </Title>
       <Form.Item
         name="company"
-        rules={[{ required: true, message: 'Por favor, selecione uma empresa!' }]}
+        rules={[{ required: true, message: 'Please select a company!' }]}
       >
-        <Select placeholder="Selecione uma empresa">
+        <Select placeholder="Select a company">
           {companies.map((company: any) => (
             <Option key={company._id} value={company._id}>{company.name}</Option>
           ))}
@@ -70,24 +70,24 @@ export default function SignUp() {
       </Form.Item>
       <Form.Item
         name="name"
-        rules={[{ required: true, message: 'Por favor insira seu nome!' }]}
+        rules={[{ required: true, message: 'Please input your Name!' }]}
       >
-        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Nome"/>
+        <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Name"/>
       </Form.Item>
       <Form.Item
         name="email"
-        rules={[{ type: "email", required: true, message: 'Por favor insira seu email!' }]}
+        rules={[{ type: "email", required: true, message: 'Please input a valid Email!' }]}
       >
         <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email"/>
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: 'Por favor insira sua senha!' }]}
+        rules={[{ required: true, message: 'Please input your Password!' }]}
       >
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Senha"
+          placeholder="Password"
         />
       </Form.Item>
       <Form.Item
@@ -96,13 +96,13 @@ export default function SignUp() {
         hasFeedback
         rules={[{ 
           required: true, 
-          message: 'Por favor confirme sua senha!', } ,
+          message: 'Please confirm your Password!', },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue('password') === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error('As senhas não são iguais!'));
+              return Promise.reject(new Error('The two passwords that you entered do not match!'));
             },
           }),
         ]}
@@ -110,19 +110,19 @@ export default function SignUp() {
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Confirmar senha"
+          placeholder="Confirm Password"
         />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" className="login-form-button">
-          Cadastrar
+          SIgn Up
         </Button>
       </Form.Item>
       <Title level={5} onClick={() => navigate('/')} style={{
         color: '#1890ff',
         cursor: 'pointer',
         textDecoration: 'underline',
-      }}> Já possui uma conta?
+      }}> Already have an account?
       </Title>
     </Form>
     </S.LoginWrapper>

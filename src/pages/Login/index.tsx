@@ -49,30 +49,31 @@ export default function Login() {
       <Title level={1} className='title' >Login</Title>
       <Form.Item
         name="email"
-        rules={[{ type:'email', required: true, message: 'Por favor insira um email válido!' }]}
+        rules={[{ type:'email', required: true, message: 'Please input a valid Email!' }]}
       >
         <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email"/>
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: 'Por favor insira sua senha!' }]}
+        rules={[{ required: true, message: 'Please input your Password!' }]}
       >
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Senha"
+          placeholder="Password"
         />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" className="login-form-button">
-          Acessar
+          Log in
         </Button>
       </Form.Item>
       <Title level={5} onClick={() => navigate('/signup')} style={{
         color: '#1890ff',
         cursor: 'pointer',
         textDecoration: 'underline',
-      }}>Não possui cadastro? Clique aqui
+      }}>
+        Sign Up
       </Title>
     </Form>
     </S.LoginWrapper>
