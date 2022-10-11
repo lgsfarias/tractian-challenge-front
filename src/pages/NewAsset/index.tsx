@@ -11,7 +11,7 @@ const { Title } = Typography
 export default function NewAsset() {
   const { setMessage } = useAlert();
   const { token ,companyId } = useAuth();
-  const { updateAssets, units,employees } = useCompany();
+  const { updateCompany, units,employees } = useCompany();
   const [disabled, setDisabled] = useState(false);
   const [unit, setUnit] = useState("");
   const [form] = Form.useForm();
@@ -45,7 +45,7 @@ export default function NewAsset() {
         message: 'Asset created successfully',
       })
       setDisabled(false);
-      updateAssets();
+      updateCompany();
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
         setMessage({

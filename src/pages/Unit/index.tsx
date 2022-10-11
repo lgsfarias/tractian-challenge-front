@@ -1,11 +1,15 @@
-import { useParams } from 'react-router-dom';
-import { Space, Table, Tag , Button, Typography} from 'antd';
+import { useParams,useNavigate } from 'react-router-dom';
 import type { ColumnsType } from 'antd/es/table';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
+import useAlert from '../../hooks/useAlert';
+import useCompany from '../../hooks/useCompany';
 import {useState,useEffect} from 'react';
 import { Asset } from '../../interfaces';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Space, Table, Tag , Button, Typography, Modal} from 'antd';
 
+const {confirm} = Modal;
 const { Title } = Typography
 
 interface DataType {
@@ -19,70 +23,97 @@ interface DataType {
 
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
-  },
-  {
-    title: 'Model',
-    dataIndex: 'model',
-    key: 'model',
-  },
-  {
-    title: 'Responsable',
-    dataIndex: 'responsable',
-    key: 'responsable',
-  },
-  {
-    title: 'Status',
-    key: 'status',
-    dataIndex: 'status',
-    render: (status) => (
-      <>
-        <Tag color={status === 'Running' ? 'green' : status === 'Alerting' ? 'orange' : 'red'} key={status}>
-          {status.toUpperCase()}
-        </Tag>
-      </>
-    )
-  },
-  {
-    title: 'Health',
-    key: 'health',
-    dataIndex: 'health',
-    render: (health) => (
-      <>
-        {health}%
-      </>
-    )
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <Button type="primary" onClick={() => console.log(record)}>Details</Button>
-        <Button onClick={() => console.log(record)}>Edit</Button>
-        <Button danger onClick={() => console.log(record)}>Delete</Button>
-      </Space>
-    ),
-  }
-];
-
-
-
 export default function Unit() {
+  const navigate = useNavigate();
   const { token } = useAuth();
+  const {setMessage} = useAlert();
+  const { updateCompany } = useCompany();
   const { id } = useParams<{ id: string }>();
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  const showPromiseConfirm = (id: string) => {
+    confirm({
+      title: 'Do you want to delete these items?',
+      icon: <ExclamationCircleOutlined />,
+      content: "This action can't be undone",
+      async onOk() {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+          await api.delete(`/assets/${id}`, config);
+          await getAssets();          
+          updateCompany();
+          setMessage({type: 'success', message: 'Asset deleted successfully'});
+        } catch (error) {
+          setMessage({type: 'error', message: 'Error deleting asset'});
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+
+  };
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Model',
+      dataIndex: 'model',
+      key: 'model',
+    },
+    {
+      title: 'Responsable',
+      dataIndex: 'responsable',
+      key: 'responsable',
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      render: (status) => (
+        <>
+          <Tag color={status === 'Running' ? 'green' : status === 'Alerting' ? 'orange' : 'red'} key={status}>
+            {status.toUpperCase()}
+          </Tag>
+        </>
+      )
+    },
+    {
+      title: 'Health',
+      key: 'health',
+      dataIndex: 'health',
+      render: (health) => (
+        <>
+          {health}%
+        </>
+      )
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <Button type="primary" onClick={() => navigate(`/assets/${record.key}`)}>View</Button>
+          <Button danger onClick={() => showPromiseConfirm(record.key)}>Delete</Button>
+        </Space>
+      ),
+    }
+  ];
 
   const data: DataType[] = assets.map((asset) => {
     return {
@@ -96,16 +127,20 @@ export default function Unit() {
     };
   });
 
-  useEffect(() => {
-    (async () => {
-      const response = await api.get(`/assets/by-unit/${id}`,
+  async function getAssets(){
+    const response = await api.get(`/assets/by-unit/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
           }
         }
       );
-      setAssets(response.data);
+    setAssets(response.data);
+  }
+
+  useEffect(() => {
+    (async () => {
+      await getAssets();
       setLoading(false);
     })();
   }, [id]);

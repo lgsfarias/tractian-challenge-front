@@ -1,14 +1,48 @@
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import useAuth from '../../hooks/useAuth';
+import useAlert from '../../hooks/useAlert';
+import useCompany from '../../hooks/useCompany';
 import { useState,useEffect } from 'react';
 import { Asset as IAsset } from '../../interfaces';
-import { Image, Typography , Col , Row} from 'antd';
+import {ExclamationCircleOutlined} from '@ant-design/icons';
+import { Image , Col , Row, Space, Descriptions, Progress, Tag, Button, Modal} from 'antd';
+
+const {confirm} = Modal;
 
 export default function Asset() {
   const { id } = useParams<{ id: string }>();
   const { token } = useAuth();
+  const { setMessage } = useAlert();
+  const { updateCompany } = useCompany();
+  const navigate = useNavigate();
   const [asset, setAsset] = useState<IAsset>();
+
+  const showPromiseConfirm = (id: string) => {
+    confirm({
+      title: 'Do you want to delete these items?',
+      icon: <ExclamationCircleOutlined />,
+      content: "This action can't be undone",
+      async onOk() {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+          await api.delete(`/assets/${id}`, config);        
+          updateCompany();
+          setMessage({type: 'success', message: 'Asset deleted successfully'});
+        } catch (error) {
+          setMessage({type: 'error', message: 'Error deleting asset'});
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+
+  };
 
   useEffect(() => {
     (async () => {
@@ -27,18 +61,44 @@ export default function Asset() {
   return (
     asset ?
     (
-      <Row>
-        <Col span={6}>
-          <Image src={asset.image} />
-        </Col>
-        <Col span={18}>
-          <Typography.Title level={2}>{asset.name}</Typography.Title>
-          <Typography.Paragraph>{asset.description}</Typography.Paragraph>
-          <Typography.Title level={5}>Model: {asset.model}</Typography.Title>
-          <Typography.Title level={5}>Unit: {asset.unit.name}</Typography.Title>
-          <Typography.Title level={5}>Owner: {asset.owner.name}</Typography.Title>
-        </Col>
-      </Row>
+      <Space direction="vertical" style={{width: '100%', marginTop:"20px"}}>
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <Descriptions title="Asset info" bordered >
+              <Descriptions.Item label="Image" span={24}>
+                <Image src={asset.image} about="image" height="300px" />
+              </Descriptions.Item>
+              <Descriptions.Item label="Name" span={24}>{asset.name}</Descriptions.Item>
+              <Descriptions.Item label="Model" span={24}>{asset.model}</Descriptions.Item>
+              <Descriptions.Item label="Description" span={24}>{asset.description}</Descriptions.Item>
+              <Descriptions.Item label="Unit" span={24}>{asset.unit.name}</Descriptions.Item>
+              <Descriptions.Item label="Owner" span={24}>{asset.owner.name}</Descriptions.Item>
+              <Descriptions.Item label="Status" span={24}>
+                <Tag
+                  color={asset.status === 'Running' ? 'green' : 
+                    asset.status === 'Stopped' ? 'red' : 'orange'}
+                >
+                  {asset.status}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Health" span={24}>
+                <Progress percent={asset.healthLevel} status="active" />
+              </Descriptions.Item>
+              <Descriptions.Item label="Actions" span={24}>
+                <Space>
+                  <Button type="primary">Edit</Button>
+                  <Button type="primary" danger 
+                    onClick={() => {
+                      showPromiseConfirm(asset._id)
+                      navigate('/home');
+                    }
+                  }>Delete</Button>
+                </Space>
+              </Descriptions.Item>
+            </Descriptions>
+          </Col>
+        </Row>
+      </Space>
     ) : <h1>Loading...</h1>
   );
 }

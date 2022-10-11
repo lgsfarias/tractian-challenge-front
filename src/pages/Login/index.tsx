@@ -15,7 +15,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { setMessage } = useAlert();
   const { login } = useAuth();
-  const { updateEmployees, updateUnits, updateAssets} = useCompany();
+  const { updateCompany} = useCompany();
 
 
   const onFinish = async (values: any) => {
@@ -24,9 +24,7 @@ export default function Login() {
         data: { token , companyId },
       } = await api.post('/login', values);
       login(token, companyId);
-      await updateUnits();
-      await updateEmployees();
-      await updateAssets();
+      await updateCompany();
       navigate('/home');
     } catch (error: Error | AxiosError | any) {
       if(error.response) {

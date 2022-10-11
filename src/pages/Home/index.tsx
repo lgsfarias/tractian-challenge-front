@@ -13,7 +13,7 @@ const { Title } = Typography
 export default function Home() {
   const { token } = useAuth()
   const [user, setUser] = useState<User>();
-  const { employees, units,assets ,updateAssets,updateEmployees,updateUnits} = useCompany();
+  const { employees, units,assets ,updateCompany} = useCompany();
 
   drilldown(Highcharts);
   const allAssetsOptions = {
@@ -177,9 +177,7 @@ export default function Home() {
         },
       };
       const response = await api.get('/users/show-data', config);
-      await updateEmployees();
-      await updateUnits();
-      await updateAssets();
+      await updateCompany();
       setUser(response.data);
     })();
   }, []);

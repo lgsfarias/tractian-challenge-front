@@ -11,7 +11,7 @@ const { Option } = Select
 export default function NewEmployee() {
   const { setMessage } = useAlert();
   const { token ,companyId } = useAuth();
-  const { units,updateEmployees } = useCompany();
+  const { units,updateCompany } = useCompany();
   const [disabled, setDisabled] = useState(false);
 
   const onFinish = async (values: any) => {
@@ -28,7 +28,7 @@ export default function NewEmployee() {
         message: 'Unit created successfully',
       })
       setDisabled(false);
-      updateEmployees();
+      updateCompany();
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
         setMessage({

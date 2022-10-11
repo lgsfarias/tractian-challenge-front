@@ -10,7 +10,7 @@ const { Title } = Typography
 export default function NewUnit() {
   const { setMessage } = useAlert();
   const { token ,companyId } = useAuth();
-  const { updateUnits } = useCompany();
+  const { updateCompany } = useCompany();
   const [disabled, setDisabled] = useState(false);
 
   const onFinish = async (values: any) => {
@@ -30,7 +30,7 @@ export default function NewUnit() {
         message: 'Unit created successfully',
       })
       setDisabled(false);
-      updateUnits();
+      updateCompany();
     } catch (error: Error | AxiosError | any) {
       if(error.response) {
         setMessage({

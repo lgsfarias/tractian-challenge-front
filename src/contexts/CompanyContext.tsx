@@ -11,9 +11,7 @@ interface CompanyContextInterface {
   setUnits: (units: Unit[]) => void;
   setEmployees: (employees: Employee[]) => void;
   setAssets: (assets: Asset[]) => void;
-  updateUnits: () => Promise<void>;
-  updateEmployees: () => Promise<void>;
-  updateAssets: () => Promise<void>;
+  updateCompany: () => Promise<void>;
 }
 
 export const CompanyContext = createContext<CompanyContextInterface | null>(null);
@@ -60,17 +58,21 @@ export function CompanyProvider({ children }: Props) {
       console.log(error);
     };
   }
+
+  async function updateCompany(){
+    await updateUnits();
+    await updateEmployees();
+    await updateAssets();
+  }
   
   useEffect(() => {
     (async () => {
-      await updateUnits();
-      await updateEmployees();
-      await updateAssets();
+      await updateCompany();
     })();
   }, []);
 
   return (
-    <CompanyContext.Provider value={{ employees, units, assets, updateEmployees, updateUnits , updateAssets, setEmployees, setUnits, setAssets }}>
+    <CompanyContext.Provider value={{ employees, units, assets, updateCompany, setEmployees, setUnits, setAssets }}>
       {children}
     </CompanyContext.Provider>
   );
