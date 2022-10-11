@@ -5,7 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import useAlert from '../../hooks/useAlert';
 import useCompany from '../../hooks/useCompany';
 import {useState,useEffect} from 'react';
-import { Asset } from '../../interfaces';
+import { Asset, Employee } from '../../interfaces';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Space, Table, Tag , Button, Typography, Modal} from 'antd';
 import LoadingPage from '../../components/LoadingPage';
@@ -13,7 +13,7 @@ import LoadingPage from '../../components/LoadingPage';
 const {confirm} = Modal;
 const { Title } = Typography
 
-interface DataType {
+interface AssetDataType {
   key: string;
   name: string;
   description: string;
@@ -24,6 +24,12 @@ interface DataType {
 
 }
 
+interface EmployeeDataType {
+  key: string;
+  name: string;
+  totalAssets: number;
+}
+
 export default function Unit() {
   const navigate = useNavigate();
   const { token } = useAuth();
@@ -31,9 +37,10 @@ export default function Unit() {
   const { updateCompany } = useCompany();
   const { id } = useParams<{ id: string }>();
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const showPromiseConfirm = (id: string) => {
+  const showPromiseConfirmAssets = (id: string) => {
     confirm({
       title: 'Do you want to delete these items?',
       icon: <ExclamationCircleOutlined />,
@@ -60,7 +67,34 @@ export default function Unit() {
 
   };
 
-  const columns: ColumnsType<DataType> = [
+  const showPromiseConfirmEmployees = (id: string) => {
+    confirm({
+      title: 'Do you want to delete these items?',
+      icon: <ExclamationCircleOutlined />,
+      content: "This action can't be undone",
+      async onOk() {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+          await api.delete(`/employees/${id}`, config);
+          await getEmployees();
+          updateCompany();
+          setMessage({type: 'success', message: 'Employee deleted successfully'});
+        } catch (error) {
+          setMessage({type: 'error', message: 'Error deleting employee'});
+        }
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+
+  };
+
+  const assetsColumns: ColumnsType<AssetDataType> = [
     {
       title: 'Name',
       dataIndex: 'name',
@@ -110,13 +144,13 @@ export default function Unit() {
       render: (_, record) => (
         <Space size="middle">
           <Button type="primary" onClick={() => navigate(`/assets/${record.key}`)}>View</Button>
-          <Button danger onClick={() => showPromiseConfirm(record.key)}>Delete</Button>
+          <Button danger onClick={() => showPromiseConfirmAssets(record.key)}>Delete</Button>
         </Space>
       ),
     }
   ];
 
-  const data: DataType[] = assets.map((asset) => {
+  const assetsData: AssetDataType[] = assets.map((asset) => {
     return {
       key: asset._id,
       name: asset.name,
@@ -125,6 +159,38 @@ export default function Unit() {
       responsable: asset.owner.name,
       status: asset.status,
       health: asset.healthLevel,
+    };
+  });
+
+  const employeesColumns: ColumnsType<EmployeeDataType> = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Total Assets',
+      dataIndex: 'totalAssets',
+      key: 'totalAssets',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <Button type="primary" onClick={() => navigate(`/employees/${record.key}`)}>View</Button>
+          <Button danger onClick={() => showPromiseConfirmEmployees(record.key)}>Delete</Button>
+        </Space>
+      ),
+    }
+  ];
+
+  const employeesData: EmployeeDataType[] = employees.map((employee) => {
+    return {
+      key: employee._id,
+      name: employee.name,
+      totalAssets: assets.filter((asset) => asset.owner._id === employee._id).length,
     };
   });
 
@@ -139,9 +205,21 @@ export default function Unit() {
     setAssets(response.data);
   }
 
+  async function getEmployees(){
+    const response = await api.get(`/employees/by-unit/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+    setEmployees(response.data);
+  }
+
   useEffect(() => {
     (async () => {
       await getAssets();
+      await getEmployees();
       setLoading(false);
     })();
   }, [id]);
@@ -150,7 +228,9 @@ export default function Unit() {
     !loading 
     ? <Space direction="vertical" style={{width: '100%'}}>
         <Title level={2}>Assets</Title>
-        <Table columns={columns} dataSource={data}/>
+        <Table columns={assetsColumns} dataSource={assetsData}/>
+        <Title level={2}>Employees</Title>
+        <Table columns={employeesColumns} dataSource={employeesData}/>
       </Space>
     : <LoadingPage/>
   );
