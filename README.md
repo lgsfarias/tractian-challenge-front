@@ -17,18 +17,6 @@
 <img src="./src/assets/banner.jpeg" alt="Banner" >
 <br/><br/>
 
-<details>
-  <summary><h2 style="display: inline-block">Abstract</h2></summary>
-  <ol>
-    <li>
-      <a href="#built-with">Built With</a>
-    </li>
-    <li><a href="#routes">Routes</a></li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
-
 <br/>
 
 ## Built With
@@ -76,6 +64,12 @@ Access the project folder:
 
 ```bash
 cd tractian-challenge-front
+```
+
+Fill the .env following the .env.example file
+
+```bash
+cp .env.example .env
 ```
 
 Install dependencies:
