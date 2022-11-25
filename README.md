@@ -86,6 +86,12 @@ npm run dev
 
 <br/>
 
+## API Repository
+
+<a href="https://github.com/lgsfarias/tractian-challenge-back" target="_blank">API repository</a>
+
+<br/>
+
 ## Contact
 
 <div>
